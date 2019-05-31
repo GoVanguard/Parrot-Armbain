@@ -146,6 +146,20 @@ create_sources_list()
 	EOF
 	;;
 
+        parrot)
+        cat <<-EOF > $basedir/etc/apt/sources.list
+        deb http://${PARROT_MIRROR} $release main contrib non-free
+        #deb-src http://${PARROT_MIRROR} $release main contrib non-free
+
+        deb http://${PARROT_MIRROR} ${release}-updates main contrib non-free
+        #deb-src http://${PARROT_MIRROR} ${release}-updates main contrib non-free
+
+        deb http://${PARROT_MIRROR} ${release}-backports main contrib non-free
+        #deb-src http://${PARROT_MIRROR} ${release}-backports main contrib non-free
+
+        EOF
+        ;;
+
 	xenial|bionic|disco)
 	cat <<-EOF > $basedir/etc/apt/sources.list
 	deb http://${UBUNTU_MIRROR} $release main restricted universe multiverse
@@ -357,7 +371,7 @@ addtorepo()
 # parameter "delete" remove incoming directory if publishing is succesful
 # function: cycle trough distributions
 
-	local distributions=("jessie" "xenial" "stretch" "bionic" "buster" "disco")
+	local distributions=("parrot", "jessie" "xenial" "stretch" "bionic" "buster" "disco")
 	local errors=0
 
 	for release in "${distributions[@]}"; do

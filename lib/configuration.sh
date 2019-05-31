@@ -123,7 +123,9 @@ BOOTCONFIG_VAR_NAME=BOOTCONFIG_${BRANCH^^}
 [[ -z $BOOTPATCHDIR ]] && BOOTPATCHDIR="u-boot-$LINUXFAMILY"
 [[ -z $KERNELPATCHDIR ]] && KERNELPATCHDIR="$LINUXFAMILY-$BRANCH"
 
-if [[ $RELEASE == xenial || $RELEASE == bionic || $RELEASE == disco ]]; then DISTRIBUTION="Ubuntu"; else DISTRIBUTION="Debian"; fi
+if [[ $RELEASE == xenial || $RELEASE == bionic || $RELEASE == disco ]]; then DISTRIBUTION="Ubuntu"; fi
+if [[ $RELEASE == buster || $RELEASE == strech || $RELEASE == jessie ]]; then DISTRIBUTION="Debian"; fi
+if [[ $RELEASE == parrot ]]; then DISTRIBUTION="Parrot"; fi
 
 # Base system dependencies
 DEBOOTSTRAP_LIST="locales,gnupg,ifupdown,apt-transport-https,ca-certificates"
@@ -212,6 +214,13 @@ case $RELEASE in
 		PACKAGE_LIST_DESKTOP_RECOMMENDS+=" chromium system-config-printer-common system-config-printer"
 	;;
 
+        parrot)
+                DEBOOTSTRAP_COMPONENTS="main"
+                PACKAGE_LIST_RELEASE="man-db less kbd net-tools netcat-openbsd gnupg2 dirmngr wget"
+                PACKAGE_LIST_DESKTOP+=" paprefs dbus-x11"
+                PACKAGE_LIST_DESKTOP_RECOMMENDS+=" chromium system-config-printer-common system-config-printer"
+        ;;
+
 	disco)
 		DEBOOTSTRAP_COMPONENTS="main,universe"
 		PACKAGE_LIST_RELEASE="man-db less kbd net-tools netcat-openbsd gnupg2 dirmngr nano wget"
@@ -226,6 +235,7 @@ esac
 
 DEBIAN_MIRROR='httpredir.debian.org/debian'
 UBUNTU_MIRROR='ports.ubuntu.com/'
+PARROT_MIRROR='deb.parrotsec.org/parrot'
 
 if [[ $DOWNLOAD_MIRROR == china ]] ; then
 	DEBIAN_MIRROR='mirrors.tuna.tsinghua.edu.cn/debian'
@@ -239,10 +249,12 @@ if [[ -f $SRC/userpatches/lib.config ]]; then
 fi
 
 # apt-cacher-ng mirror configurarion
+APT_MIRROR=$DEBIAN_MIRROR
 if [[ $DISTRIBUTION == Ubuntu ]]; then
 	APT_MIRROR=$UBUNTU_MIRROR
-else
-	APT_MIRROR=$DEBIAN_MIRROR
+fi
+if [[ $DISTRIBUTION == Parrot ]]; then
+	APT_MIRROR=$PARROT_MIRROR
 fi
 
 [[ -n $APT_PROXY_ADDR ]] && display_alert "Using custom apt-cacher-ng address" "$APT_PROXY_ADDR" "info"

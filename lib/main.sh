@@ -216,6 +216,7 @@ if [[ $KERNEL_ONLY != yes && -z $RELEASE ]]; then
 	[[ $EXPERT = yes ]] && options+=("buster" "Debian 10 Buster / unsupported")
 	options+=("xenial" "Ubuntu Xenial 16.04 LTS")
 	options+=("bionic" "Ubuntu Bionic 18.04 LTS")
+	options+=("parrot" "ParrotSec based on Buster")
 	[[ $EXPERT = yes ]] && options+=("disco" "Ubuntu Disco 19.04 / unsupported")
 
 	RELEASE=$(dialog --stdout --title "Choose a release" --backtitle "$backtitle" --menu "Select the target OS release" \
