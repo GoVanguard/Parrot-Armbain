@@ -41,7 +41,7 @@ create_chroot()
 	display_alert "Creating build chroot" "$release/$arch" "info"
 	local includes="ccache,locales,git,ca-certificates,devscripts,libfile-fcntllock-perl,debhelper,rsync,python3,distcc"
 	# perhaps a temporally workaround
-	[[ $release == buster || $release == disco ]] && includes=$includes",perl-openssl-defaults,libnet-ssleay-perl"
+	[[ $release == buster || $release == disco || $release == parrot ]] && includes=$includes",perl-openssl-defaults,libnet-ssleay-perl"
 	if [[ $NO_APT_CACHER != yes ]]; then
 		local mirror_addr="http://localhost:3142/${apt_mirror[$release]}"
 	else
@@ -122,7 +122,7 @@ chroot_build_packages()
 	local built_ok=()
 	local failed=()
 	# only make packages for recent releases. There are no changes on older
-	for release in stretch bionic buster disco; do
+	for release in parrot stretch bionic buster disco; do
 		for arch in armhf arm64; do
 			display_alert "Starting package building process" "$release/$arch" "info"
 

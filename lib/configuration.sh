@@ -124,7 +124,7 @@ BOOTCONFIG_VAR_NAME=BOOTCONFIG_${BRANCH^^}
 [[ -z $KERNELPATCHDIR ]] && KERNELPATCHDIR="$LINUXFAMILY-$BRANCH"
 
 if [[ $RELEASE == xenial || $RELEASE == bionic || $RELEASE == disco ]]; then DISTRIBUTION="Ubuntu"; fi
-if [[ $RELEASE == buster || $RELEASE == strech || $RELEASE == jessie ]]; then DISTRIBUTION="Debian"; fi
+if [[ $RELEASE == buster || $RELEASE == stretch || $RELEASE == jessie ]]; then DISTRIBUTION="Debian"; fi
 if [[ $RELEASE == parrot ]]; then DISTRIBUTION="Parrot"; fi
 
 # Base system dependencies

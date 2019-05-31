@@ -189,12 +189,23 @@ create_rootfs_cache()
 		# this should fix resolvconf installation failure in some cases
 		chroot $SDCARD /bin/bash -c 'echo "resolvconf resolvconf/linkify-resolvconf boolean false" | debconf-set-selections'
 
+		eval 'LC_ALL=C LANG=C chroot $SDCARD /bin/bash -c "apt --fix-broken install -y"' \
+			${PROGRESS_LOG_TO_FILE:+' | tee -a $DEST/debug/debootstrap.log'} \
+			${OUTPUT_DIALOG:+' | dialog --backtitle "$backtitle" --progressbox "Fixing apt..." $TTY_Y $TTY_X'} \
+			${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}
+
 		# stage: update packages list
 		display_alert "Updating package list" "$RELEASE" "info"
 		eval 'LC_ALL=C LANG=C chroot $SDCARD /bin/bash -c "apt-get -q -y $apt_extra update"' \
 			${PROGRESS_LOG_TO_FILE:+' | tee -a $DEST/debug/debootstrap.log'} \
 			${OUTPUT_DIALOG:+' | dialog --backtitle "$backtitle" --progressbox "Updating package lists..." $TTY_Y $TTY_X'} \
 			${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}
+
+		eval 'LC_ALL=C LANG=C chroot $SDCARD /bin/bash -c "apt --fix-broken install -y"' \
+			${PROGRESS_LOG_TO_FILE:+' | tee -a $DEST/debug/debootstrap.log'} \
+			${OUTPUT_DIALOG:+' | dialog --backtitle "$backtitle" --progressbox "Fixing apt..." $TTY_Y $TTY_X'} \
+			${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}
+
 
 		#[[ ${PIPESTATUS[0]} -ne 0 ]] && exit_with_error "Updating package lists failed"
 
@@ -204,6 +215,11 @@ create_rootfs_cache()
 			$apt_extra $apt_extra_progress upgrade"' \
 			${PROGRESS_LOG_TO_FILE:+' | tee -a $DEST/debug/debootstrap.log'} \
 			${OUTPUT_DIALOG:+' | dialog --backtitle "$backtitle" --progressbox "Upgrading base packages..." $TTY_Y $TTY_X'} \
+			${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}
+
+		eval 'LC_ALL=C LANG=C chroot $SDCARD /bin/bash -c "apt --fix-broken install -y"' \
+			${PROGRESS_LOG_TO_FILE:+' | tee -a $DEST/debug/debootstrap.log'} \
+			${OUTPUT_DIALOG:+' | dialog --backtitle "$backtitle" --progressbox "Fixing apt..." $TTY_Y $TTY_X'} \
 			${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}
 
 		#[[ ${PIPESTATUS[0]} -ne 0 ]] && exit_with_error "Upgrading base packages failed"
@@ -216,7 +232,14 @@ create_rootfs_cache()
 			${OUTPUT_DIALOG:+' | dialog --backtitle "$backtitle" --progressbox "Installing Armbian system..." $TTY_Y $TTY_X'} \
 			${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}
 
-		[[ ${PIPESTATUS[0]} -ne 0 ]] && exit_with_error "Installation of Armbian packages failed"
+		eval 'LC_ALL=C LANG=C chroot $SDCARD /bin/bash -c "apt --fix-broken install -y"' \
+			${PROGRESS_LOG_TO_FILE:+' | tee -a $DEST/debug/debootstrap.log'} \
+			${OUTPUT_DIALOG:+' | dialog --backtitle "$backtitle" --progressbox "Fixing apt..." $TTY_Y $TTY_X'} \
+			${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}
+
+		eval 'LC_ALL=C LANG=C chroot $SDCARD /bin/bash -c "cat /etc/apt/sources.list"'
+
+		#[[ ${PIPESTATUS[0]} -ne 0 ]] && exit_with_error "Installation of Armbian packages failed"
 
 		# DEBUG: print free space
 		echo -e "\nFree space:"
