@@ -20,6 +20,7 @@ EXIT_PATCHING_ERROR="" # exit patching if failed
 HOST="$(echo "$BOARD" | cut -f1 -d-)" # set hostname to the board
 ROOTFSCACHE_VERSION=4
 CHROOT_CACHE_VERSION=6
+echo "-------------------- DISPLAY MANAGER: ${DISPLAY_MANAGER} -----------------------"
 [[ -z $DISPLAY_MANAGER ]] && DISPLAY_MANAGER=nodm
 ROOTFS_CACHE_MAX=16 # max number of rootfs cache, older ones will be cleaned up
 
