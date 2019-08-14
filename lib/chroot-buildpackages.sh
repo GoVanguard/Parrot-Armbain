@@ -39,7 +39,7 @@ create_chroot()
 	components['xenial']='main,universe,multiverse'
 	components['bionic']='main,universe,multiverse'
 	components['disco']='main,universe,multiverse'
-	components['parrot']='main,contrib'
+	components['parrot']='main,contrib,backports'
 	display_alert "Creating build chroot" "$release/$arch" "info"
 	local includes="ccache,locales,git,ca-certificates,devscripts,libfile-fcntllock-perl,debhelper,rsync,python3,distcc"
 	# perhaps a temporally workaround

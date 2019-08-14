@@ -166,8 +166,10 @@ create_sources_list()
 
 	parrot)
 	cat <<-EOF > $basedir/etc/apt/sources.list
-	deb http://${PARROT_MIRROR} $release main contrib non-free
-	#deb-src http://${PARROT_MIRROR} $release main contrib non-free
+	deb http://${PARROT_MIRROR} rolling main contrib non-free
+        deb http://${PARROT_MIRROR} rolling-updates main contrib non-free
+        deb http://${PARROT_MIRROR} rolling-backports main contrib non-free
+        deb http://${PARROT_MIRROR} rolling-security main contrib non-free
 	EOF
 	;;
 	esac

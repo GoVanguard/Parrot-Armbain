@@ -122,7 +122,7 @@ create_rootfs_cache()
 
 		# stage: debootstrap base system
 		if [[ $NO_APT_CACHER != yes ]]; then
-			# apt-cacher-ng apt-get proxy parameter
+			apt-cacher-ng apt-get proxy parameter
 			local apt_extra="-o Acquire::http::Proxy=\"http://${APT_PROXY_ADDR:-localhost:3142}\""
 			local apt_mirror="http://${APT_PROXY_ADDR:-localhost:3142}/$APT_MIRROR"
 		else
@@ -133,11 +133,19 @@ create_rootfs_cache()
 		[[ -z $OUTPUT_DIALOG ]] && local apt_extra_progress="--show-progress -o DPKG::Progress-Fancy=1"
 
 		display_alert "Installing base system" "Stage 1/2" "info"
-		eval 'debootstrap --include=${DEBOOTSTRAP_LIST} ${PACKAGE_LIST_EXCLUDE:+ --exclude=${PACKAGE_LIST_EXCLUDE// /,}} \
-			--arch=$ARCH --components=${DEBOOTSTRAP_COMPONENTS} --foreign $RELEASE $SDCARD/ $apt_mirror' \
+		#if [[ ${RELEASE} -eq "parrot" ]]; then
+	 	SUITE="lts"
+		#else
+		#SUITE=${RELEASE}
+		#fi
+		#--include=${DEBOOTSTRAP_LIST}
+		#--foreign
+		eval 'debootstrap --no-check-gpg --include=${DEBOOTSTRAP_LIST} ${PACKAGE_LIST_EXCLUDE:+ --exclude=${PACKAGE_LIST_EXCLUDE// /,}} \
+			--arch=$ARCH --components=${DEBOOTSTRAP_COMPONENTS} --foreign $SUITE $SDCARD/ $apt_mirror' \
 			${PROGRESS_LOG_TO_FILE:+' | tee -a $DEST/debug/debootstrap.log'} \
 			${OUTPUT_DIALOG:+' | dialog --backtitle "$backtitle" --progressbox "Debootstrap (stage 1/2)..." $TTY_Y $TTY_X'} \
 			${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}
+
 
 		[[ ${PIPESTATUS[0]} -ne 0 || ! -f $SDCARD/debootstrap/debootstrap ]] && exit_with_error "Debootstrap base system first stage failed"
 
@@ -145,6 +153,7 @@ create_rootfs_cache()
 
 		mkdir -p $SDCARD/usr/share/keyrings/
 		cp /usr/share/keyrings/debian-archive-keyring.gpg $SDCARD/usr/share/keyrings/
+		cp /usr/share/keyrings/parrot-archive-keyring.gpg $SDCARD/usr/share/keyrings/
 
 		display_alert "Installing base system" "Stage 2/2" "info"
 		eval 'chroot $SDCARD /bin/bash -c "/debootstrap/debootstrap --second-stage"' \
@@ -169,7 +178,9 @@ create_rootfs_cache()
 		# stage: configure language and locales
 		display_alert "Configuring locales" "$DEST_LANG" "info"
 
-		[[ -f $SDCARD/etc/locale.gen ]] && sed -i "s/^# $DEST_LANG/$DEST_LANG/" $SDCARD/etc/locale.gen
+		#[[ -f $SDCARD/etc/locale.gen ]] && sed -i "s/^# $DEST_LANG/$DEST_LANG/" $SDCARD/etc/locale.gen
+		rm -f $SDCARD/etc/locale.gen
+		cp /etc/locale.gen $SDCARD/etc/locale.gen
 		eval 'LC_ALL=C LANG=C chroot $SDCARD /bin/bash -c "locale-gen $DEST_LANG"' ${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}
 		eval 'LC_ALL=C LANG=C chroot $SDCARD /bin/bash -c "update-locale LANG=$DEST_LANG LANGUAGE=$DEST_LANG LC_MESSAGES=$DEST_LANG"' \
 			${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}
@@ -184,16 +195,21 @@ create_rootfs_cache()
 		create_sources_list "$RELEASE" "$SDCARD/"
 
 		# stage: add armbian repository and install key
-		if [[ $RELEASE == parrot ]]; then
-			echo "deb http://apt.armbian.com buster main buster-utils buster-desktop" > $SDCARD/etc/apt/sources.list.d/armbian.list
-		else
-			echo "deb http://apt.armbian.com $RELEASE main ${RELEASE}-utils ${RELEASE}-desktop" > $SDCARD/etc/apt/sources.list.d/armbian.list
-		fi
+		#if [[ $RELEASE == parrot ]]; then
+		#	echo "deb http://apt.armbian.com buster main buster-utils buster-desktop" > $SDCARD/etc/apt/sources.list.d/armbian.list
+		#else
+		echo "deb http://apt.armbian.com $RELEASE main ${RELEASE}-utils ${RELEASE}-desktop" > $SDCARD/etc/apt/sources.list.d/armbian.list
+		#fi
 
 		cp $SRC/config/armbian.key $SDCARD
 		eval 'chroot $SDCARD /bin/bash -c "cat armbian.key | apt-key add -"' \
 			${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}
 		rm $SDCARD/armbian.key
+
+
+                cp /usr/share/keyrings/parrot-archive-keyring.gpg $SDCARD
+                eval 'chroot $SDCARD /bin/bash -c "cat parrot-archive-keyring.gpg | apt-key add -"' \
+                        ${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}
 
 		# compressing packages list to gain some space
 		echo "Acquire::GzipIndexes "true"; Acquire::CompressionTypes::Order:: "gz";" > $SDCARD/etc/apt/apt.conf.d/02compress-indexes

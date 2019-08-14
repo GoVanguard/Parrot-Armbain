@@ -133,8 +133,9 @@ if [[ $RELEASE == buster || $RELEASE == stretch || $RELEASE == jessie ]]; then D
 if [[ $RELEASE == parrot ]]; then DISTRIBUTION="Parrot"; fi
 
 # Base system dependencies
-DEBOOTSTRAP_LIST="locales,gnupg,ifupdown,apt-transport-https,ca-certificates"
-[[ $BUILD_DESKTOP == yes ]] && DEBOOTSTRAP_LIST+=",libgtk2.0-bin"
+DEBOOTSTRAP_LIST="ca-certificates,gnupg2"
+#DEBOOTSTRAP_LIST="locales,gnupg,ifupdown,apt-transport-https,ca-certificates"
+#[[ $BUILD_DESKTOP == yes ]] && DEBOOTSTRAP_LIST+=",libgtk2.0-bin"
 
 # Essential packages
 PACKAGE_LIST="bc bridge-utils build-essential cpufrequtils device-tree-compiler figlet fbset fping \
@@ -204,9 +205,9 @@ case $RELEASE in
 	;;
 
         parrot)
-                DEBOOTSTRAP_COMPONENTS="main"
-                PACKAGE_LIST_RELEASE="man-db less kbd net-tools netcat-openbsd gnupg2 dirmngr wget"
-                PACKAGE_LIST_DESKTOP+=" paprefs dbus-x11"
+                DEBOOTSTRAP_COMPONENTS="main,contrib,backports"
+                PACKAGE_LIST_RELEASE="man-db less kbd net-tools netcat-openbsd gnupg2 dirmngr wget parrot-core"
+                PACKAGE_LIST_DESKTOP+=" paprefs dbus-x11 parrot-interface parrot-tools"
                 PACKAGE_LIST_DESKTOP_RECOMMENDS+=" chromium system-config-printer-common system-config-printer"
         ;;
 
@@ -224,7 +225,7 @@ esac
 
 DEBIAN_MIRROR='httpredir.debian.org/debian'
 UBUNTU_MIRROR='ports.ubuntu.com/'
-PARROT_MIRROR='deb.parrotsec.org/parrot'
+PARROT_MIRROR='mirrors.mit.edu/parrot' #'deb.parrotsec.org/parrot/'
 
 if [[ $DOWNLOAD_MIRROR == china ]] ; then
 	DEBIAN_MIRROR='mirrors.tuna.tsinghua.edu.cn/debian'
