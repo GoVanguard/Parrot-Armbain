@@ -392,7 +392,7 @@ install_distribution_specific()
 		# disable conflicting services
 		chroot "${SDCARD}" /bin/bash -c "systemctl --no-reload mask ondemand.service >/dev/null 2>&1"
 		;;
-        buster|parrot)
+        buster|parrot|kali)
                 # remove doubled uname from motd
                 [[ -f $SDCARD/etc/update-motd.d/10-uname ]] && rm "${SDCARD}"/etc/update-motd.d/10-uname
                 # rc.local is not existing in stretch but we might need it

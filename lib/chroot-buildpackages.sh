@@ -33,6 +33,7 @@ create_chroot()
 	apt_mirror['bionic']="$UBUNTU_MIRROR"
 	apt_mirror['disco']="$UBUNTU_MIRROR"
 	apt_mirror['parrot']="$PARROT_MIRROR"
+        apt_mirror['kali']="$KALI_MIRROR"
 	components['jessie']='main,contrib'
 	components['stretch']='main,contrib'
 	components['buster']='main,contrib'
@@ -40,6 +41,7 @@ create_chroot()
 	components['bionic']='main,universe,multiverse'
 	components['disco']='main,universe,multiverse'
 	components['parrot']='main,contrib,backports'
+        components['kali']='main,contrib'
 	display_alert "Creating build chroot" "$release/$arch" "info"
 	local includes="ccache,locales,git,ca-certificates,devscripts,libfile-fcntllock-perl,debhelper,rsync,python3,distcc"
 	# perhaps a temporally workaround
@@ -95,6 +97,7 @@ chroot_prepare_distccd()
 	gcc_version['stretch']='6.3'
 	gcc_version['buster']='8.3'
 	gcc_version['parrot']='8.3'
+        gcc_version['kali']='8.3'
 	gcc_version['xenial']='5.4'
 	gcc_version['bionic']='5.4'
 	gcc_version['disco']='8.3'

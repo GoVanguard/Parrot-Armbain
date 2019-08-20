@@ -134,7 +134,7 @@ create_rootfs_cache()
 
 		display_alert "Installing base system" "Stage 1/2" "info"
 		#if [[ ${RELEASE} -eq "parrot" ]]; then
-	 	SUITE="lts"
+	 	SUITE="kali-rolling"
 		#else
 		#SUITE=${RELEASE}
 		#fi
@@ -146,7 +146,7 @@ create_rootfs_cache()
 			${OUTPUT_DIALOG:+' | dialog --backtitle "$backtitle" --progressbox "Debootstrap (stage 1/2)..." $TTY_Y $TTY_X'} \
 			${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}
 
-
+                # debootstrap --foreign --keyring=/usr/share/keyrings/kali-archive-keyring.gpg --include=kali-archive-keyring --arch ${architecture} ${suite} kali-${architecture} http://${mirror}/kali
 		[[ ${PIPESTATUS[0]} -ne 0 || ! -f $SDCARD/debootstrap/debootstrap ]] && exit_with_error "Debootstrap base system first stage failed"
 
 		cp /usr/bin/$QEMU_BINARY $SDCARD/usr/bin/

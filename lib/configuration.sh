@@ -131,6 +131,7 @@ BOOTCONFIG_VAR_NAME=BOOTCONFIG_${BRANCH^^}
 if [[ $RELEASE == xenial || $RELEASE == bionic || $RELEASE == disco ]]; then DISTRIBUTION="Ubuntu"; fi
 if [[ $RELEASE == buster || $RELEASE == stretch || $RELEASE == jessie ]]; then DISTRIBUTION="Debian"; fi
 if [[ $RELEASE == parrot ]]; then DISTRIBUTION="Parrot"; fi
+if [[ $RELEASE == kali ]]; then DISTRIBUTION="Kali"; fi
 
 # Base system dependencies
 DEBOOTSTRAP_LIST="ca-certificates,gnupg2"
@@ -211,12 +212,19 @@ case $RELEASE in
                 PACKAGE_LIST_DESKTOP_RECOMMENDS+=" chromium system-config-printer-common system-config-printer"
         ;;
 
+        kali)
+                DEBOOTSTRAP_COMPONENTS="main"
+                PACKAGE_LIST_RELEASE="abootimg cgpt fake-hwclock ntpdate u-boot-tools vboot-utils vboot-kernel-utils apt-utils dkms e2fsprogs ifupdown initramfs-tools kali-defaults parted sudo usbutils firmware-linux firmware-atheros firmware-libertas firmware-realtek arm-trusted-firmware linux-headers-arm64 linux-image-arm64 u-boot-sunxi u-boot-menu"
+                PACKAGE_LIST_DESKTOP="kali-menu fonts-croscore fonts-crosextra-caladea fonts-crosextra-carlito gnome-theme-kali gtk3-engines-xfce kali-desktop-xfce kali-root-login lightdm network-manager network-manager-gnome xfce4 xserver-xorg-video-fbdev"
+                PACKAGE_LIST_DESKTOP_RECOMMENDS="firefox-esr xfce4-terminal wpasupplicant aircrack-ng ethtool hydra john libnfc-bin mfoc nmap passing-the-hash sqlmap usbutils winexe wireshark apache2 openssh-server"
+                PACKAGE_LIST_ADDITIONAL="${PACKAGE_LIST_ADDITIONAL/armbian-firmware /}"
+        ;;
+
 	disco)
 		DEBOOTSTRAP_COMPONENTS="main,universe"
 		PACKAGE_LIST_RELEASE="man-db less kbd net-tools netcat-openbsd gnupg2 dirmngr nano wget"
 		PACKAGE_LIST_DESKTOP+=" xserver-xorg-input-all paprefs dbus-x11 pulseaudio-module-gsettings"
 		PACKAGE_LIST_DESKTOP_RECOMMENDS+=" chromium-browser system-config-printer-common system-config-printer language-selector-gnome"
-		# temp disable
 		PACKAGE_LIST_ADDITIONAL="${PACKAGE_LIST_ADDITIONAL/armbian-firmware /}"
 	;;
 
@@ -225,7 +233,8 @@ esac
 
 DEBIAN_MIRROR='httpredir.debian.org/debian'
 UBUNTU_MIRROR='ports.ubuntu.com/'
-PARROT_MIRROR='mirrors.mit.edu/parrot' #'deb.parrotsec.org/parrot/'
+PARROT_MIRROR='mirrors.mit.edu/parrot'
+KALI_MIRROR='http.kali.org/kali'
 
 if [[ $DOWNLOAD_MIRROR == china ]] ; then
 	DEBIAN_MIRROR='mirrors.tuna.tsinghua.edu.cn/debian'
