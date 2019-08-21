@@ -32,7 +32,7 @@ create_chroot()
 	apt_mirror['xenial']="$UBUNTU_MIRROR"
 	apt_mirror['bionic']="$UBUNTU_MIRROR"
 	apt_mirror['disco']="$UBUNTU_MIRROR"
-	apt_mirror['rolling']="$PARROT_MIRROR"
+	apt_mirror['lts']="$PARROT_MIRROR"
         apt_mirror['kali-rolling']="$KALI_MIRROR"
 	components['jessie']='main,contrib'
 	components['stretch']='main,contrib'
@@ -40,12 +40,12 @@ create_chroot()
 	components['xenial']='main,universe,multiverse'
 	components['bionic']='main,universe,multiverse'
 	components['disco']='main,universe,multiverse'
-	components['rolling']='main,contrib,backports'
+	components['lts']='main,contrib,backports'
         components['kali-rolling']='main,contrib'
 	display_alert "Creating build chroot" "$release/$arch" "info"
 	local includes="ccache,locales,git,ca-certificates,devscripts,libfile-fcntllock-perl,debhelper,rsync,python3,distcc"
 	# perhaps a temporally workaround
-	[[ $release == buster || $release == disco || $release == rolling || $release == kali-rolling ]] && includes=$includes",perl-openssl-defaults,libnet-ssleay-perl"
+	[[ $release == buster || $release == disco || $release == lts || $release == kali-rolling ]] && includes=$includes",perl-openssl-defaults,libnet-ssleay-perl"
 	if [[ $NO_APT_CACHER != yes ]]; then
 		local mirror_addr="http://localhost:3142/${apt_mirror[$release]}"
 	else
@@ -96,7 +96,7 @@ chroot_prepare_distccd()
 	gcc_version['jessie']='4.9'
 	gcc_version['stretch']='6.3'
 	gcc_version['buster']='8.3'
-	gcc_version['rolling']='8.3'
+	gcc_version['lts']='8.3'
         gcc_version['kali-rolling']='8.3'
 	gcc_version['xenial']='5.4'
 	gcc_version['bionic']='5.4'

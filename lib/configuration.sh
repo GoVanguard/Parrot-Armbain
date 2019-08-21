@@ -130,7 +130,7 @@ BOOTCONFIG_VAR_NAME=BOOTCONFIG_${BRANCH^^}
 
 if [[ $RELEASE == xenial || $RELEASE == bionic || $RELEASE == disco ]]; then DISTRIBUTION="Ubuntu"; fi
 if [[ $RELEASE == buster || $RELEASE == stretch || $RELEASE == jessie ]]; then DISTRIBUTION="Debian"; fi
-if [[ $RELEASE == rolling ]]; then DISTRIBUTION="Parrot"; fi
+if [[ $RELEASE == lts ]]; then DISTRIBUTION="Parrot"; fi
 if [[ $RELEASE == kali-rolling ]]; then DISTRIBUTION="Kali"; fi
 
 # Base system dependencies
@@ -205,7 +205,8 @@ case $RELEASE in
 		PACKAGE_LIST_DESKTOP_RECOMMENDS+=" chromium system-config-printer-common system-config-printer"
 	;;
 
-        rolling)
+        lts)
+		DEBOOTSTRAP_LIST="ca-certificates,gnupg2"
                 DEBOOTSTRAP_COMPONENTS="main,contrib"
                 PACKAGE_LIST_RELEASE="man-db less kbd net-tools netcat-openbsd gnupg2 dirmngr wget parrot-core"
                 PACKAGE_LIST_DESKTOP+=" paprefs dbus-x11 parrot-interface parrot-tools"
@@ -214,9 +215,10 @@ case $RELEASE in
 
         kali-rolling)
                 DEBOOTSTRAP_COMPONENTS="main,contrib"
-                PACKAGE_LIST_RELEASE="gnupg2 wget console-setup abootimg cgpt fake-hwclock ntpdate u-boot-tools vboot-utils vboot-kernel-utils apt-utils dkms e2fsprogs ifupdown initramfs-tools kali-defaults parted sudo usbutils firmware-linux firmware-atheros firmware-libertas firmware-realtek arm-trusted-firmware linux-headers-arm64 linux-image-arm64 u-boot-sunxi u-boot-menu network-manager openssh-server"
-                PACKAGE_LIST_DESKTOP="kali-menu fonts-croscore fonts-crosextra-caladea fonts-crosextra-carlito gnome-theme-kali gtk3-engines-xfce kali-desktop-xfce kali-root-login lightdm network-manager network-manager-gnome xfce4 xserver-xorg-video-fbdev"
-                PACKAGE_LIST_DESKTOP_RECOMMENDS="firefox-esr xfce4-terminal wpasupplicant aircrack-ng ethtool hydra john libnfc-bin mfoc nmap passing-the-hash sqlmap usbutils winexe wireshark apache2"
+                PACKAGE_LIST_RELEASE="man-db less kbd net-tools netcat-openbsd gnupg2 dirmngr wget"
+                PACKAGE_LIST_DESKTOP="kali-defaults kali-menu fonts-croscore fonts-crosextra-caladea fonts-crosextra-carlito gnome-theme-kali gtk3-engines-xfce kali-desktop-xfce kali-root-login lightdm network-manager network-manager-gnome xfce4 xserver-xorg-video-fbdev xserver-xorg-input-all pulseaudio-module-gsettings dbus-x11 xserver-xorg-input-evdev"
+                PACKAGE_LIST_DESKTOP_RECOMMENDS="firefox-esr xfce4-terminal wpasupplicant"
+	        PACKAGE_LIST_ADDITIONAL+="aircrack-ng ethtool hydra john libnfc-bin mfoc nmap passing-the-hash sqlmap usbutils winexe wireshark apache2"
         ;;
 
 	disco)

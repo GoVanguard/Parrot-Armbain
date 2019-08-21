@@ -297,7 +297,7 @@ create_board_package()
 	EOF
 
 	# this is required for NFS boot to prevent deconfiguring the network on shutdown
-	[[ $RELEASE == xenial || $RELEASE == stretch || $RELEASE == bionic || $RELEASE == buster || $RELEASE == disco || $RELEASE == rolling || $RELEASE == kali-rolling ]] && sed -i 's/#no-auto-down/no-auto-down/g' "${destination}"/etc/network/interfaces.default
+	[[ $RELEASE == xenial || $RELEASE == stretch || $RELEASE == bionic || $RELEASE == buster || $RELEASE == disco || $RELEASE == lts || $RELEASE == kali-rolling ]] && sed -i 's/#no-auto-down/no-auto-down/g' "${destination}"/etc/network/interfaces.default
 
 	if [[ ( $LINUXFAMILY == sun*i || $LINUXFAMILY == pine64 ) && $BRANCH == default ]]; then
 		# add mpv config for vdpau_sunxi
@@ -355,18 +355,16 @@ create_board_package()
 		cp "${SRC}"/packages/bsp/10-override-random-mac.conf "${destination}"/usr/lib/NetworkManager/conf.d/
 	;;
 
-        rolling)
-                #mkdir -p "${destination}"/usr/lib/NetworkManager/conf.d/
-                #cp "${SRC}"/packages/bsp/zz-override-wifi-powersave-off.conf "${destination}"/usr/lib/NetworkManager/conf.d/
-                #cp "${SRC}"/packages/bsp/10-override-random-mac.conf "${destination}"/usr/lib/NetworkManager/conf.d/
-		echo "No tweaks"
+        lts)
+                mkdir -p "${destination}"/usr/lib/NetworkManager/conf.d/
+                cp "${SRC}"/packages/bsp/zz-override-wifi-powersave-off.conf "${destination}"/usr/lib/NetworkManager/conf.d/
+                cp "${SRC}"/packages/bsp/10-override-random-mac.conf "${destination}"/usr/lib/NetworkManager/conf.d/
         ;;
 
         kali-rolling)
-                #mkdir -p "${destination}"/usr/lib/NetworkManager/conf.d/
-                #cp "${SRC}"/packages/bsp/zz-override-wifi-powersave-off.conf "${destination}"/usr/lib/NetworkManager/conf.d/
-                #cp "${SRC}"/packages/bsp/10-override-random-mac.conf "${destination}"/usr/lib/NetworkManager/conf.d/
-		echo "No tweaks"
+                mkdir -p "${destination}"/usr/lib/NetworkManager/conf.d/
+                cp "${SRC}"/packages/bsp/zz-override-wifi-powersave-off.conf "${destination}"/usr/lib/NetworkManager/conf.d/
+                cp "${SRC}"/packages/bsp/10-override-random-mac.conf "${destination}"/usr/lib/NetworkManager/conf.d/
         ;;
 
 	esac

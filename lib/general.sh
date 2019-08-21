@@ -164,12 +164,12 @@ create_sources_list()
 	EOF
 	;;
 
-	rolling)
+	lts)
 	cat <<-EOF > $basedir/etc/apt/sources.list
-	deb http://${PARROT_MIRROR} rolling main contrib non-free
-        deb http://${PARROT_MIRROR} rolling-updates main contrib non-free
-        deb http://${PARROT_MIRROR} rolling-backports main contrib non-free
-        deb http://${PARROT_MIRROR} rolling-security main contrib non-free
+	deb http://${PARROT_MIRROR} $release main contrib non-free
+        deb http://${PARROT_MIRROR} $release-updates main contrib non-free
+        deb http://${PARROT_MIRROR} $release-backports main contrib non-free
+        deb http://${PARROT_MIRROR} $release-security main contrib non-free
 	EOF
 	;;
 

@@ -1,0 +1,9 @@
+[Unit]
+Description=set the gpio2 EN line low for usb2.0 power regulator ON
+
+[Service]
+ExecStart=/usr/local/sbin/rock64_usb_power_service.sh
+Type=oneshot
+
+[Install]
+WantedBy=default.target

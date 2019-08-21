@@ -392,7 +392,7 @@ install_distribution_specific()
 		# disable conflicting services
 		chroot "${SDCARD}" /bin/bash -c "systemctl --no-reload mask ondemand.service >/dev/null 2>&1"
 		;;
-        buster|rolling)
+        buster|lts)
                 # remove doubled uname from motd
                 [[ -f $SDCARD/etc/update-motd.d/10-uname ]] && rm "${SDCARD}"/etc/update-motd.d/10-uname
                 # rc.local is not existing in stretch but we might need it
@@ -420,57 +420,6 @@ install_distribution_specific()
 		#!/bin/sh -e
 		exit 0
 		EOF
-		cat <<-EOF > "${SDCARD}"/usr/local/sbin/rock64_usb_power_service.sh
-		#!/bin/bash
-		# rock64_usb_power_service.sh
-		#
-		# Mark H. Harris
-		# v0.1b
-		#
-		#
-		PWRON=0
-		PWROFF=1
-		GP=2
-		GPOUT="out"
-		GPPATH="/sys/class/gpio"
-		GPVALUE="value"
-		GPMODE="direction"
-		
-		## remove gpio if already exported
-		if [ -d $GPPATH/gpio$GP ]
-		then
-		   echo $GP > $GPPATH/unexport
-		   sleep 2
-		fi
-		
-		# export the gpio, and set if ready
-		echo $GP > $GPPATH/export
-		sleep 2
-		if [ -e $GPPATH/gpio$GP/$GPMODE ]
-		then
-		   echo $GPOUT > $GPPATH/gpio$GP/$GPMODE
-		   sleep 2
-		   echo $PWRON > $GPPATH/gpio$GP/$GPVALUE
-		fi
-		EOF
-		cat <<-EOF > "${SDCARD}"/etc/systemd/system/usb_gpio_on.service
-		[Unit]
-		Description=set the gpio2 EN line low for usb2.0 power regulator ON
-		
-		[Service]
-		ExecStart=/usr/local/sbin/rock64_usb_power_service.sh
-		Type=oneshot
-		
-		[Install]
-		WantedBy=default.target
-		EOF
-		chown root:root "${SDCARD}"/etc/systemd/system/usb_gpio_on.service
-		chmod 0664 "${SDCARD}"/etc/systemd/system/usb_gpio_on.service
-		chown root:root "${SDCARD}"/usr/local/sbin/rock64_usb_power_service.sh
-		chmod 0754 "${SDCARD}"/usr/local/sbin/rock64_usb_power_service.sh
-		chmod +x "${SDCARD}"/etc/rc.local
-		systemctl  daemon-reload
-		systemctl enable usb_gpio_on.service
                 ;;
 	disco)
 		# remove motd news from motd.ubuntu.com
