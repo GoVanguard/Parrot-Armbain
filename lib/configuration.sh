@@ -209,16 +209,16 @@ case $RELEASE in
 		DEBOOTSTRAP_LIST="ca-certificates,gnupg2"
                 DEBOOTSTRAP_COMPONENTS="main,contrib"
                 PACKAGE_LIST_RELEASE="man-db less kbd net-tools netcat-openbsd gnupg2 dirmngr wget parrot-core"
-                PACKAGE_LIST_DESKTOP+=" paprefs dbus-x11 parrot-interface parrot-tools"
-                PACKAGE_LIST_DESKTOP_RECOMMENDS+=" chromium system-config-printer-common system-config-printer"
+                PACKAGE_LIST_DESKTOP+="paprefs dbus-x11 parrot-interface parrot-tools"
+                PACKAGE_LIST_DESKTOP_RECOMMENDS+="chromium system-config-printer-common system-config-printer"
         ;;
 
         kali-rolling)
                 DEBOOTSTRAP_COMPONENTS="main,contrib"
                 PACKAGE_LIST_RELEASE="man-db less kbd net-tools netcat-openbsd gnupg2 dirmngr wget"
-                PACKAGE_LIST_DESKTOP="kali-defaults kali-menu fonts-croscore fonts-crosextra-caladea fonts-crosextra-carlito gnome-theme-kali gtk3-engines-xfce kali-desktop-xfce kali-root-login lightdm network-manager network-manager-gnome xfce4 xserver-xorg-video-fbdev xserver-xorg-input-all pulseaudio-module-gsettings dbus-x11 xserver-xorg-input-evdev"
+                PACKAGE_LIST_DESKTOP="kali-defaults kali-menu fonts-croscore fonts-crosextra-caladea fonts-crosextra-carlito gnome-theme-kali gtk3-engines-xfce kali-desktop-xfce kali-root-login lightdm network-manager network-manager-gnome xfce4 xserver-xorg-video-fbdev xserver-xorg-input-all pulseaudio-module-gsettings dbus-x11 xserver-xorg-input-evdev pulseaudio-module-gconf"
                 PACKAGE_LIST_DESKTOP_RECOMMENDS="firefox-esr xfce4-terminal wpasupplicant"
-	        PACKAGE_LIST_ADDITIONAL+="aircrack-ng ethtool hydra john libnfc-bin mfoc nmap passing-the-hash sqlmap usbutils winexe wireshark apache2"
+	        PACKAGE_LIST_ADDITIONAL+="aircrack-ng ethtool hydra john libnfc-bin mfoc nmap passing-the-hash sqlmap usbutils winexe wireshark apache2 acccheck ace-voip amap automater braa casefile cdpsnarf cisco-torch cookie-cadger copy-router-config dmitry dnmap dnsenum dnsmap dnsrecon dnstracer dnswalk dotdotpwn enum4linux enumiax exploitdb fierce firewalk fragroute fragrouter ghost-phisher golismero goofile lbd maltego-teeth masscan metagoofil miranda nmap p0f parsero recon-ng set smtp-user-enum snmpcheck sslcaudit sslsplit sslstrip sslyze thc-ipv6 theharvester tlssled twofi urlcrazy wireshark wol-e xplico ismtp intrace hping3 bbqsql bed cisco-auditing-tool cisco-global-exploiter cisco-ocs cisco-torch copy-router-config doona dotdotpwn greenbone-security-assistant hexorbase jsql lynis nmap ohrwurm openvas-cli openvas-manager openvas-scanner oscanner powerfuzzer sfuzz sidguesser siparmyknife sqlmap sqlninja sqlsus thc-ipv6 tnscmd10g unix-privesc-check yersinia aircrack-ng asleap bluelog blueranger bluesnarfer bully cowpatty crackle eapmd5pass fern-wifi-cracker ghost-phisher giskismet gqrx kalibrate-rtl killerbee kismet mdk3 mfcuk mfoc mfterm multimon-ng pixiewps reaver redfang spooftooph wifi-honey wifitap wifite apache-users arachni bbqsql blindelephant burpsuite cutycapt davtest deblaze dirb dirbuster fimap funkload grabber jboss-autopwn joomscan jsql maltego-teeth padbuster paros parsero plecost powerfuzzer proxystrike recon-ng skipfish sqlmap sqlninja sqlsus ua-tester uniscan vega w3af webscarab websploit wfuzz wpscan xsser zaproxy binwalk bulk-extractor chntpw cuckoo dc3dd ddrescue dumpzilla extundelete foremost galleta guymager iphone-backup-analyzer p0f pdf-parser pdfid pdgmail peepdf volatility xplico"
         ;;
 
 	disco)
