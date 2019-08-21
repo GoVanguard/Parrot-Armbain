@@ -25,7 +25,7 @@ POT="${SCRIPTPATH}/output/debs/"
 # shellcheck source=general.sh
 source "${SCRIPTPATH}"lib/general.sh
 
-DISTROS=("kali" "parrot" "jessie" "xenial" "stretch" "bionic" "buster" "disco")
+DISTROS=("kali-rolling" "rolling" "jessie" "xenial" "stretch" "bionic" "buster" "disco")
 
 ParseOptions() {
 	case $@ in

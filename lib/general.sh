@@ -164,7 +164,7 @@ create_sources_list()
 	EOF
 	;;
 
-	parrot)
+	rolling)
 	cat <<-EOF > $basedir/etc/apt/sources.list
 	deb http://${PARROT_MIRROR} rolling main contrib non-free
         deb http://${PARROT_MIRROR} rolling-updates main contrib non-free
@@ -173,15 +173,13 @@ create_sources_list()
 	EOF
 	;;
 
-
-        kali)
+        kali-rolling)
         cat <<-EOF > $basedir/etc/apt/sources.list
         deb http://${KALI_MIRROR} $release main contrib non-free
-        deb http://${KALI_MIRROR} ${release}-updates main contrib non-free
-        deb http://${KALI_MIRROR} ${release}-backports main contrib non-free
-        deb http://security.debian.org/ ${release}/updates main contrib non-free
-        EOF
+        deb-src http://${KALI_MIRROR} $release main non-free contrib
+	EOF
         ;;
+
 	esac
 }
 
@@ -408,7 +406,7 @@ addtorepo()
 # parameter "delete" remove incoming directory if publishing is succesful
 # function: cycle trough distributions
 
-	local distributions=("kali", "parrot" "jessie" "xenial" "stretch" "bionic" "buster" "disco")
+	local distributions=("kali-rolling" "rolling" "jessie" "xenial" "stretch" "bionic" "buster" "disco")
 	local errors=0
 
 	for release in "${distributions[@]}"; do

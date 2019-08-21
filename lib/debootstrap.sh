@@ -133,27 +133,20 @@ create_rootfs_cache()
 		[[ -z $OUTPUT_DIALOG ]] && local apt_extra_progress="--show-progress -o DPKG::Progress-Fancy=1"
 
 		display_alert "Installing base system" "Stage 1/2" "info"
-		#if [[ ${RELEASE} -eq "parrot" ]]; then
-	 	SUITE="kali-rolling"
-		#else
-		#SUITE=${RELEASE}
-		#fi
-		#--include=${DEBOOTSTRAP_LIST}
-		#--foreign
+
 		eval 'debootstrap --no-check-gpg --include=${DEBOOTSTRAP_LIST} ${PACKAGE_LIST_EXCLUDE:+ --exclude=${PACKAGE_LIST_EXCLUDE// /,}} \
-			--arch=$ARCH --components=${DEBOOTSTRAP_COMPONENTS} --foreign $SUITE $SDCARD/ $apt_mirror' \
+			--arch=$ARCH --components=${DEBOOTSTRAP_COMPONENTS} --foreign $RELEASE $SDCARD/ $apt_mirror' \
 			${PROGRESS_LOG_TO_FILE:+' | tee -a $DEST/debug/debootstrap.log'} \
 			${OUTPUT_DIALOG:+' | dialog --backtitle "$backtitle" --progressbox "Debootstrap (stage 1/2)..." $TTY_Y $TTY_X'} \
 			${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}
 
-                # debootstrap --foreign --keyring=/usr/share/keyrings/kali-archive-keyring.gpg --include=kali-archive-keyring --arch ${architecture} ${suite} kali-${architecture} http://${mirror}/kali
+
 		[[ ${PIPESTATUS[0]} -ne 0 || ! -f $SDCARD/debootstrap/debootstrap ]] && exit_with_error "Debootstrap base system first stage failed"
 
 		cp /usr/bin/$QEMU_BINARY $SDCARD/usr/bin/
 
 		mkdir -p $SDCARD/usr/share/keyrings/
 		cp /usr/share/keyrings/debian-archive-keyring.gpg $SDCARD/usr/share/keyrings/
-		cp /usr/share/keyrings/parrot-archive-keyring.gpg $SDCARD/usr/share/keyrings/
 
 		display_alert "Installing base system" "Stage 2/2" "info"
 		eval 'chroot $SDCARD /bin/bash -c "/debootstrap/debootstrap --second-stage"' \
@@ -195,21 +188,12 @@ create_rootfs_cache()
 		create_sources_list "$RELEASE" "$SDCARD/"
 
 		# stage: add armbian repository and install key
-		#if [[ $RELEASE == parrot ]]; then
-		#	echo "deb http://apt.armbian.com buster main buster-utils buster-desktop" > $SDCARD/etc/apt/sources.list.d/armbian.list
-		#else
 		echo "deb http://apt.armbian.com $RELEASE main ${RELEASE}-utils ${RELEASE}-desktop" > $SDCARD/etc/apt/sources.list.d/armbian.list
-		#fi
 
 		cp $SRC/config/armbian.key $SDCARD
 		eval 'chroot $SDCARD /bin/bash -c "cat armbian.key | apt-key add -"' \
 			${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}
 		rm $SDCARD/armbian.key
-
-
-                cp /usr/share/keyrings/parrot-archive-keyring.gpg $SDCARD
-                eval 'chroot $SDCARD /bin/bash -c "cat parrot-archive-keyring.gpg | apt-key add -"' \
-                        ${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}
 
 		# compressing packages list to gain some space
 		echo "Acquire::GzipIndexes "true"; Acquire::CompressionTypes::Order:: "gz";" > $SDCARD/etc/apt/apt.conf.d/02compress-indexes
@@ -223,7 +207,7 @@ create_rootfs_cache()
 
 		# stage: update packages list
 		display_alert "Updating package list" "$RELEASE" "info"
-		eval 'LC_ALL=C LANG=C chroot $SDCARD /bin/bash -c "apt-get -q -y $apt_extra update"' \
+		eval 'LC_ALL=C LANG=C chroot $SDCARD /bin/bash -c "apt-get -q -y --allow-change-held-packages $apt_extra update"' \
 			${PROGRESS_LOG_TO_FILE:+' | tee -a $DEST/debug/debootstrap.log'} \
 			${OUTPUT_DIALOG:+' | dialog --backtitle "$backtitle" --progressbox "Updating package lists..." $TTY_Y $TTY_X'} \
 			${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}
@@ -233,7 +217,7 @@ create_rootfs_cache()
 		# stage: upgrade base packages from xxx-updates and xxx-backports repository branches
 		display_alert "Upgrading base packages" "Armbian" "info"
 		eval 'LC_ALL=C LANG=C chroot $SDCARD /bin/bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y -q \
-			$apt_extra $apt_extra_progress --fix-broken upgrade"' \
+			$apt_extra $apt_extra_progress --fix-broken --allow-change-held-packages dist-upgrade"' \
 			${PROGRESS_LOG_TO_FILE:+' | tee -a $DEST/debug/debootstrap.log'} \
 			${OUTPUT_DIALOG:+' | dialog --backtitle "$backtitle" --progressbox "Upgrading base packages..." $TTY_Y $TTY_X'} \
 			${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}
@@ -243,7 +227,7 @@ create_rootfs_cache()
 		# stage: install additional packages
 		display_alert "Installing packages for" "Armbian" "info"
 		eval 'LC_ALL=C LANG=C chroot $SDCARD /bin/bash -c "DEBIAN_FRONTEND=noninteractive apt -y -q \
-			$apt_extra $apt_extra_progress --no-install-recommends --fix-broken install $PACKAGE_LIST"' \
+			$apt_extra $apt_extra_progress --no-install-recommends --fix-broken --allow-change-held-packages install $PACKAGE_LIST"' \
 			${PROGRESS_LOG_TO_FILE:+' | tee -a $DEST/debug/debootstrap.log'} \
 			${OUTPUT_DIALOG:+' | dialog --backtitle "$backtitle" --progressbox "Installing Armbian system..." $TTY_Y $TTY_X'} \
 			${OUTPUT_VERYSILENT:+' >/dev/null 2>/dev/null'}

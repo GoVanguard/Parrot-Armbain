@@ -252,8 +252,8 @@ if [[ $KERNEL_ONLY != yes && -z $RELEASE ]]; then
 	options+=("buster" "Debian 10 Buster")
 	options+=("xenial" "Ubuntu Xenial 16.04 LTS")
 	options+=("bionic" "Ubuntu Bionic 18.04 LTS")
-	options+=("parrot" "ParrotSec based on Buster")
-        options+=("kali" "Kali Linux 2019")
+	options+=("rolling" "ParrotSec based on Buster")
+        options+=("kali-rolling" "Kali Linux 2019")
 	[[ $EXPERT = yes ]] && options+=("disco" "Ubuntu Disco 19.04 / unsupported")
 
 	RELEASE=$(dialog --stdout --title "Choose a release" --backtitle "$backtitle" \

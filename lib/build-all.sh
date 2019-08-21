@@ -17,7 +17,7 @@ FORCEDRELEASE=$RELEASE
 
 rm -rf /run/armbian
 mkdir -p /run/armbian
-RELEASE_LIST=("parrot" )
+RELEASE_LIST=("" )
 BRANCH_LIST=("default")
 #RELEASE_LIST=("xenial" "jessie" "stretch" "bionic" "buster" "disco" )
 #BRANCH_LIST=("default" "next" "dev")
