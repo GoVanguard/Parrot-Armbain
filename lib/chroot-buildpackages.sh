@@ -26,17 +26,15 @@ create_chroot()
 	declare -A qemu_binary apt_mirror components
 	qemu_binary['armhf']='qemu-arm-static'
 	qemu_binary['arm64']='qemu-aarch64-static'
+	apt_mirror['jessie']="$DEBIAN_MIRROR"
 	apt_mirror['stretch']="$DEBIAN_MIRROR"
 	apt_mirror['buster']="$DEBIAN_MIRROR"
 	apt_mirror['xenial']="$UBUNTU_MIRROR"
 	apt_mirror['bionic']="$UBUNTU_MIRROR"
 	apt_mirror['disco']="$UBUNTU_MIRROR"
-<<<<<<< HEAD
 	apt_mirror['lts']="$PARROT_MIRROR"
         apt_mirror['kali-rolling']="$KALI_MIRROR"
 	components['jessie']='main,contrib'
-=======
->>>>>>> 26dcccb705cfffff1a28f3c4fb53fb950afc683c
 	components['stretch']='main,contrib'
 	components['buster']='main,contrib'
 	components['xenial']='main,universe,multiverse'
@@ -95,6 +93,7 @@ chroot_prepare_distccd()
 	local arch=$2
 	local dest=/tmp/distcc/${release}-${arch}
 	declare -A gcc_version gcc_type
+	gcc_version['jessie']='4.9'
 	gcc_version['stretch']='6.3'
 	gcc_version['buster']='8.3'
 	gcc_version['lts']='8.3'
@@ -175,7 +174,7 @@ chroot_build_packages()
 					continue
 				fi
 
-				local plugin_target_dir=${DEB_STORAGE}/extra/$package_component/
+				local plugin_target_dir=$DEST/debs/extra/$package_component/
 				mkdir -p $plugin_target_dir
 
 				# check if needs building
@@ -299,8 +298,8 @@ chroot_installpackages_local()
 	mkdir -p /tmp/aptly-temp/
 	aptly -config=$conf repo create temp
 	# NOTE: this works recursively
-	aptly -config=$conf repo add temp ${DEB_STORAGE}/extra/${RELEASE}-desktop/
-	aptly -config=$conf repo add temp ${DEB_STORAGE}/extra/${RELEASE}-utils/
+	aptly -config=$conf repo add temp $DEST/debs/extra/${RELEASE}-desktop/
+	aptly -config=$conf repo add temp $DEST/debs/extra/${RELEASE}-utils/
 	# -gpg-key="925644A6"
 	aptly -keyring="$SRC/packages/extras-buildpkgs/buildpkg-public.gpg" -secret-keyring="$SRC/packages/extras-buildpkgs/buildpkg.gpg" -batch=true -config=$conf \
 		 -gpg-key="925644A6" -passphrase="testkey1234" -component=temp -distribution=$RELEASE publish repo temp

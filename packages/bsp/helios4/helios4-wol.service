@@ -1,7 +1,7 @@
 [Unit]
 Description=Enable Wake-on-LAN for Helios4 eth0
-After=network-online.target
-Wants=network-online.target
+Requires=network.target
+After=network.target
 
 [Service]
 ExecStart=/sbin/ethtool -s eth0 wol g

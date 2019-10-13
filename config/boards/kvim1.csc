@@ -2,7 +2,13 @@
 BOARD_NAME="Khadas VIM1"
 BOARDFAMILY="meson64"
 BOOTCONFIG="khadas-vim_defconfig"
+#
 MODULES=""
 MODULES_NEXT=""
+#
 KERNEL_TARGET="dev"
-FULL_DESKTOP="yes"
+CLI_TARGET="buster:dev"
+DESKTOP_TARGET="buster:dev"
+#
+CLI_BETA_TARGET=""
+DESKTOP_BETA_TARGET=""
